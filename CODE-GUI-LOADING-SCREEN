@@ -1,0 +1,231 @@
+al)
+			end
+		end)
+
+		-- 🔇 No auto execution, no button
+	end
+end)repeat wait() until game:IsLoaded() and game.Players.LocalPlayer
+
+local validKey = "SFHCEI5WQONDBE21438"
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+local SoundService = game:GetService("SoundService")
+
+-- Key GUI
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "NoLagKeyUI"
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 220, 0, 160)
+frame.Position = UDim2.new(0.5, -110, 0.5, -80)
+frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
+
+-- Dragging
+local dragging, dragInput, dragStart, startPos
+frame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = frame.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then dragging = false end
+		end)
+	end
+end)
+frame.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement then dragInput = input end
+end)
+UserInputService.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		local delta = input.Position - dragStart
+		frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
+end)
+
+-- UI
+local title = Instance.new("TextLabel", frame)
+title.Text = "🔐 NO LAG V5"
+title.Size = UDim2.new(1, 0, 0, 30)
+title.Position = UDim2.new(0, 0, 0, 6)
+title.BackgroundTransparency = 1
+title.Font = Enum.Font.FredokaOne
+title.TextColor3 = Color3.fromRGB(0, 255, 127)
+title.TextScaled = true
+
+local textbox = Instance.new("TextBox", frame)
+textbox.PlaceholderText = "Paste your key here..."
+textbox.Size = UDim2.new(0.9, 0, 0, 28)
+textbox.Position = UDim2.new(0.05, 0, 0.35, 0)
+textbox.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+textbox.TextColor3 = Color3.new(1, 1, 1)
+textbox.Font = Enum.Font.Code
+textbox.TextScaled = true
+Instance.new("UICorner", textbox).CornerRadius = UDim.new(0, 6)
+
+local button = Instance.new("TextButton", frame)
+button.Text = "Unlock Script"
+button.Size = UDim2.new(0.9, 0, 0, 24)
+button.Position = UDim2.new(0.05, 0, 0.65, 0)
+button.BackgroundColor3 = Color3.fromRGB(0, 255, 127)
+button.TextColor3 = Color3.new(0, 0, 0)
+button.Font = Enum.Font.FredokaOne
+button.TextScaled = true
+Instance.new("UICorner", button).CornerRadius = UDim.new(0, 6)
+
+local copyKey = Instance.new("TextButton", frame)
+copyKey.Text = "📋 Copy Key"
+copyKey.Size = UDim2.new(0.9, 0, 0, 22)
+copyKey.Position = UDim2.new(0.05, 0, 0.85, 0)
+copyKey.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+copyKey.TextColor3 = Color3.new(1, 1, 1)
+copyKey.Font = Enum.Font.FredokaOne
+copyKey.TextScaled = true
+Instance.new("UICorner", copyKey).CornerRadius = UDim.new(0, 6)
+
+copyKey.MouseButton1Click:Connect(function()
+	setclipboard(validKey)
+	copyKey.Visible = false
+	local copied = Instance.new("TextLabel", frame)
+	copied.Size = UDim2.new(1, 0, 0, 20)
+	copied.Position = UDim2.new(0, 0, 1, -22)
+	copied.BackgroundTransparency = 1
+	copied.Font = Enum.Font.FredokaOne
+	copied.TextColor3 = Color3.fromRGB(0, 200, 255)
+	copied.TextScaled = true
+	copied.Text = "📋 Key Copied!"
+	task.delay(2.5, function()
+		copied:Destroy()
+		copyKey.Visible = true
+	end)
+end)
+
+-- Unlock
+button.MouseButton1Click:Connect(function()
+	if textbox.Text == validKey then
+		gui:Destroy()
+
+		-- Mute Grow a Garden sounds
+		for _, s in ipairs(workspace:GetDescendants()) do
+			if s:IsA("Sound") and s.IsPlaying then s:Stop() end
+		end
+
+		local screenGui = Instance.new("ScreenGui", game.Players.LocalPlayer:WaitForChild("PlayerGui"))
+		screenGui.IgnoreGuiInset = true
+		screenGui.ResetOnSpawn = false
+		screenGui.DisplayOrder = 999
+
+		local main = Instance.new("Frame", screenGui)
+		main.Size = UDim2.new(1, 0, 1, 0)
+		main.BackgroundColor3 = Color3.new(0, 0, 0)
+
+		local galaxy = Instance.new("ImageLabel", main)
+		galaxy.Size = UDim2.new(1, 0, 1, 0)
+		galaxy.Image = "rbxassetid://7205866972"
+		galaxy.BackgroundTransparency = 1
+		galaxy.ScaleType = Enum.ScaleType.Crop
+
+		local function spawnNyanCat(yOffset)
+			local nyan = Instance.new("ImageLabel", main)
+			nyan.Image = "rbxassetid://533586724"
+			nyan.BackgroundTransparency = 1
+			nyan.Size = UDim2.new(0, 120, 0, 60)
+			nyan.Position = UDim2.new(-0.2, 0, yOffset, 0)
+			nyan.ZIndex = 2
+
+			local rainbow = Instance.new("ImageLabel", main)
+			rainbow.Image = "rbxassetid://241837157"
+			rainbow.BackgroundTransparency = 1
+			rainbow.Size = UDim2.new(0, 300, 0, 60)
+			rainbow.Position = UDim2.new(-0.5, 0, yOffset, 0)
+			rainbow.ZIndex = 1
+
+			task.spawn(function()
+				while true do
+					for i = -0.2, 1.2, 0.005 do
+						nyan.Position = UDim2.new(i, 0, yOffset, 0)
+						rainbow.Position = UDim2.new(i - 0.25, 0, yOffset, 0)
+						wait(0.01)
+					end
+				end
+			end)
+		end
+
+		spawnNyanCat(0.2)
+		spawnNyanCat(0.4)
+		spawnNyanCat(0.6)
+
+		local title = Instance.new("TextLabel", main)
+		title.Text = "NO LAG V5 OPENING..."
+		title.Size = UDim2.new(1, 0, 0.1, 0)
+		title.Position = UDim2.new(0, 0, 0.4, 0)
+		title.BackgroundTransparency = 1
+		title.Font = Enum.Font.FredokaOne
+		title.TextScaled = true
+		task.spawn(function()
+			local hue = 0
+			while title and title.Parent do
+				title.TextColor3 = Color3.fromHSV(hue, 1, 1)
+				hue = (hue + 0.01) % 1
+				wait(0.03)
+			end
+		end)
+
+		local bar = Instance.new("Frame", main)
+		bar.Size = UDim2.new(0.5, 0, 0.05, 0)
+		bar.Position = UDim2.new(0.25, 0, 0.85, 0)
+		bar.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+		Instance.new("UICorner", bar).CornerRadius = UDim.new(0, 10)
+
+		local fill = Instance.new("Frame", bar)
+		fill.Size = UDim2.new(0, 0, 1, 0)
+		fill.BackgroundColor3 = Color3.fromRGB(0, 200, 255)
+		Instance.new("UICorner", fill).CornerRadius = UDim.new(0, 10)
+
+		local percent = Instance.new("TextLabel", bar)
+		percent.Size = UDim2.new(1, 0, 1, 0)
+		percent.BackgroundTransparency = 1
+		percent.TextColor3 = Color3.new(1, 1, 1)
+		percent.Font = Enum.Font.GothamBold
+		percent.TextScaled = true
+		percent.Text = "0%"
+
+		local fact = Instance.new("TextLabel", main)
+		fact.Size = UDim2.new(0.8, 0, 0.07, 0)
+		fact.Position = UDim2.new(0.1, 0, 0.75, 0)
+		fact.BackgroundTransparency = 1
+		fact.TextColor3 = Color3.new(1, 1, 1)
+		fact.Font = Enum.Font.Gotham
+		fact.TextScaled = true
+		fact.TextWrapped = true
+		local facts = {
+			"Did you know? Roblox was founded in 2004.",
+			"Lua is the scripting language of Roblox!",
+			"Roblox was originally called DynaBlocks.",
+			"You're loading something awesome right now!",
+			"Just wait — the loading screen will get even cooler soon!"
+		}
+		task.spawn(function()
+			while true do
+				for _, msg in ipairs(facts) do
+					fact.Text = msg
+					wait(3)
+				end
+			end
+		end)
+
+		local total = 500
+		local duration = 15
+		TweenService:Create(fill, TweenInfo.new(duration, Enum.EasingStyle.Linear), {
+			Size = UDim2.new(1, 0, 1, 0)
+		}):Play()
+		task.spawn(function()
+			for i = 1, total do
+				percent.Text = i .. "%"
+				wait(duration / total)
+			end
+		end)
+
+		-- 🔇 No auto execution, no button
+	end
+end)
